@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta classset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercenarios</title>
+    <style>
+        header{
+            background-color:lightgray;
+            font-size: 30px;
+        }
+        select{
+            font-size: 20px;
+        }
+        input{
+            font-size: 20px;
+        }
+        
+        #ficha{
+            border: 1px solid black;
+            width: 300px;
+            font-size:20px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+        #fichatopo{
+            background-color:rgb(219,232,212) ;
+            display:flex;
+            width: 300px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Classe:
+        <select id="classe">
+           <option value="aleatorio">Aleatorio</option>
+           <option value="fighter">Fighter</option>
+           <option value="cleric">Cleric</option>
+           <option value="magic-user">Magic-User</option>
+           <option value="thief">Thief</option>
+           <option value="dwarf">Dwarf</option>
+           <option value="elf">Elf</option>
+           <option value="halfling">Halfling</option>
+        </select>
+        Nivel:
+        <select id="nivel">
+            <option value="aleatorio">Aleatorio</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+        </select>
+        <input type="button" value="Gerar" onclick="gerar()">
+    </header>
+    <div id="ficha">
+        <div id="fichatopo">
+            Level:<div id="nivel1"></div>
+            <div id="classe1"></div>(retainer)
+        </div><br>
+        Armour Class:<div id="ca"></div>
+        Hit Points: <div id="hd"></div>
+        Attacks: <div id="att"></div>
+        THAC0:<div id="tac0"></div>
+        Movement Rate:<div id="mov"></div>
+        Saves:<div id="saves"></div>
+        Alignment:<div id="ali"></div>
+        STR: <div id="str"></div>
+        INT: <div id="int"></div>
+        WIS: <div id="wis"></div>
+        DEX: <div id="dex"></div>
+        CON: <div id="con"></div>
+        CHA: <div id="cha"></div>
+        Spells: <div id="spells"></div>
+        Items: <div id="items"></div>
+    </div>
+    <script>
+        var str
+        var int
+        var wis
+        var des
+        var con
+        var cha
+        var stxm
+        var intm
+        var wism
+        var desm
+        var conm
+        var cham
+        var classlist=[];
+        var splsm=[[ 'Detectar Magia'
+                    , 'Disco Flutuante'
+                    , 'Encantar Pessoa'
+                    , 'Escudo'
+                    , 'Ler Idiomas'
+                    , 'Ler Magia'
+                    , 'Luz (Escuridão)'
+                    , 'Mísseis Mágicos'
+                    , 'Obstruir Porta'
+                    , 'Proteção Contra o Mal'
+                    , 'Sono'
+                    , 'Ventriloquismo'],
+                    
+                    ['Arrombar'
+                    , 'Detectar Invisibilidade'
+                    , 'Detectar o Mal'
+                    , 'Fechadura Arcana'
+                    , 'Força Fantasmagórica'
+                    , 'Imagem Espelhada'
+                    , 'Invisibilidade'
+                    , 'Levitar'
+                    , 'Localizar Objeto'
+                    , 'Luz Contínua (Escuridão Contínua)'
+                    , 'PES - Percepção Extrassensorial'
+                    , 'Teia'],
+                    
+                    ['Bola de Fogo'
+                    , 'Celeridade'
+                    , 'Clarividência'
+                    , 'Dissipar Magia'
+                    , 'Imobilizar Pessoa'
+                    , 'Infravisão'
+                    , 'Invisibilidade, 3 m de Raio'
+                    , 'Proteção Contra o Mal, 3 m de Raio'
+                    , 'Proteção Contra Projéteis Mundanos'
+                    , 'Relâmpago'
+                    , 'Respirar Debaixo D água'
+                    , 'Voo']
+                    
+                    ]
+        var splsc=[['Curar Ferimentos Leves (Infligir Ferimentos Leves)'
+                    , 'Detectar Magia'
+                    , 'Detectar o Mal'
+                    , 'Luz (Escuridão)'
+                    , 'Proteção Contra o Mal'
+                    , 'Purificar Comida e Água'
+                    , 'Remover Medo (Causar Medo)'
+                    , 'Resistir ao Frio'],
+                    ['Bênção (Mau Agouro)'
+                    , 'Descobrir Alinhamento'
+                    , 'Encantar Serpentes'
+                    , 'Encontrar Armadilhas'
+                    , 'Falar com Animais'
+                    , 'Imobilizar Pessoa'
+                    , 'Resistir ao Fogo'
+                    , 'Silêncio, 4,5 m de Raio']
+                    [ 'Aumentar Animal'
+                    , 'Curar Doença (Causar Doença)'
+                    , 'Encantar Arma'
+                    , 'Localizar Objeto'
+                    , 'Luz Contínua (Escuridão Contínua)'
+                    , 'Remover Maldição (Amaldiçoar)']
+                ]
+        var niv
+        var clas 
+        var k
+        var cont 
+        var hd 
+        var ca
+        var armadura=[`unarmoured`,`unarmoured + shield`,`leather armour`,`leather armour + shield`,`chainmail`,`chainmail + shield`,`plate mail`,`plate mail + shield`];
+        var tac0 
+        var save
+        var wpn=['Adaga (1d4)','Adaga de prata (1d4)','Espada (1d8)','Espada curta (1d6)','Lança(1d6)','Machado de mão (1d6)','Lança de cavalaria(1d6)','Arma de haste (1d10)','Espada de duas mãos (1d10)','Machado de guerra (1d8)','Cajado(1d4)','Clava (1d4)','Martelo de guerra (1d6)','Maça (1d6)','Funda (1d4)','Arco curto (1d6)','Arco longo (1d6)','Besta (1d6)','Azagaia (1d4)']
+        var item=['Acônito (1 punhado)',
+'Água benta (frasco pequeno)',
+'Alho' ,
+'Arpéu (gancho)' ,
+'Cantil' ,
+'Corda (15 m)',
+'Cravos de ferro (12)',
+'Espelho (pequeno, aço)',
+'Estacas (3) e marreta',
+'Ferramentas de ladrão',
+'Lampião',
+'Martelo (pequeno)',
+'Mochila',
+'Óleo (1 frasco)',
+'Pé de cabra',
+'Pederneira (pedra e aço)',
+'Ração (comum, 7 dias)',
+'Ração (de viagem, 7 dias)',
+'Saco (grande)',
+'Saco (pequeno)',
+'Símbolo sagrado',
+'Tochas (6)',
+'Vara (3 m, madeira)',
+'Vinho (1 litro)']
+        
+        function gerar(){
+
+            //3d6 em ordem
+            var d1=Math.floor( 1 + 6*Math.random());
+            var d2=Math.floor( 1 + 6*Math.random());
+            var d3=Math.floor( 1 + 6*Math.random());
+            var a=window.document.getElementById('str');
+             a.innerHTML=d1+d2+d3
+             str=a.innerHTML
+                         
+            if(str<=3){
+                strm=-1
+            }
+            if(str>=4 && str<=5){
+                strm=-2
+            }
+            if(str>=6 && str<=8){
+                strm=-1
+            }
+            if(str>=9 && str<=12){
+                strm=0
+            }
+            if(str>=13 && str<=15){
+                strm=+1
+            }
+            if(str>=13 && str<=15){
+                strm=+1
+            }
+            if(str>=16 && str<=17){
+                strm=+2
+            }
+            if(str>=18){
+                strm=+3
+            }
+             
+             var d1=Math.floor( 1 + 6*Math.random());
+            var d2=Math.floor( 1 + 6*Math.random());
+            var d3=Math.floor( 1 + 6*Math.random());
+            var a=window.document.getElementById('int');
+             a.innerHTML=d1+d2+d3
+             int=a.innerHTML
+             
+             var d1=Math.floor( 1 + 6*Math.random());
+            var d2=Math.floor( 1 + 6*Math.random());
+            var d3=Math.floor( 1 + 6*Math.random());
+            var a=window.document.getElementById('wis');
+             a.innerHTML=d1+d2+d3
+             wis=a.innerHTML
+
+             var d1=Math.floor( 1 + 6*Math.random());
+            var d2=Math.floor( 1 + 6*Math.random());
+            var d3=Math.floor( 1 + 6*Math.random());
+            var a=window.document.getElementById('dex');
+             a.innerHTML=d1+d2+d3
+             des=a.innerHTML
+
+             if(des<=3){
+                desm=-1
+            }
+            if(des>=4 && des<=5){
+                desm=-2
+            }
+            if(des>=6 && des<=8){
+                desm=-1
+            }
+            if(des>=9 && des<=12){
+                desm=0
+            }
+            if(des>=13 && des<=15){
+                desm=+1
+            }
+            if(des>=13 && des<=15){
+                desm=+1
+            }
+            if(des>=16 && des<=17){
+                desm=+2
+            }
+            if(des>=18){
+                desm=+3
+            }
+
+             var d1=Math.floor( 1 + 6*Math.random());
+            var d2=Math.floor( 1 + 6*Math.random());
+            var d3=Math.floor( 1 + 6*Math.random());
+            var a=window.document.getElementById('con');
+             a.innerHTML=d1+d2+d3
+             con=a.innerHTML
+
+            var d1=Math.floor( 1 + 6*Math.random());
+            var d2=Math.floor( 1 + 6*Math.random());
+            var d3=Math.floor( 1 + 6*Math.random());
+            var a=window.document.getElementById('cha');
+             a.innerHTML=d1+d2+d3
+             cha=a.innerHTML
+             
+
+             //  Classe aleatoria
+             if(window.document.getElementById('classe').value==='aleatorio'){
+             classlist.push(`fighter`);
+             classlist.push(`cleric`);
+             classlist.push(`magic-user`);
+             classlist.push(`thief`);
+             if(con>8){
+                classlist.push(`dwarf`);
+             }
+             if(int>8){
+
+                classlist.push(`elf`);   
+             }
+             if(dex>8 && con>8){
+                classlist.push(`halfling`);     
+             }
+             var c=Math.floor( 1 + (classlist.length-1)*Math.random());
+             
+             var a=window.document.getElementById(`classe1`);
+             a.innerHTML=classlist[c];
+             clas=a.innerHTML;
+             }else{// Escolhe classe 
+                var a=window.document.getElementById(`classe1`);
+                a.innerHTML=window.document.getElementById('classe').value
+                clas=a.innerHTML;
+                
+                if(clas===`dwarf` && con<9){
+                    var a=window.document.getElementById('con');
+                    a.innerHTML=`9`
+                    con=a.innerHTML
+                    }
+                if(clas===`elf` && int<9){
+                    var a=window.document.getElementById('con');
+                    a.innerHTML=`9`
+                    int=a.innerHTML
+                    }
+                if(clas===`halfling` && con<9 || dex<9){
+    
+                    if(con<9){
+                        var a=window.document.getElementById('con');
+                        a.innerHTML=`9`
+                        con=a.innerHTML
+                    }
+                    if(dex<9){
+                        var a=window.document.getElementById('dex');
+                        a.innerHTML=`9`
+                        dex=a.innerHTML
+                    }
+                }     
+                }
+                //Nivel aleatorio
+                if(window.document.getElementById('nivel').value==="aleatorio"){
+
+                var lev=14
+                
+               if(window.document.getElementById('classe').value===`dwarf`){
+                var lev=12
+               }
+               if(classlist[c]===`elf`){
+                var lev=10
+               }
+               if(classlist[c]===`halfling`){
+                var lev=8
+               }
+               
+               var niv=Math.floor( 1 + lev*Math.random());
+               var a=window.document.getElementById('nivel1');
+                a.innerHTML= niv;
+                niv=a.innerHTML;
+             }else{//Nivel escolhido
+                niv=Number(window.document.getElementById('nivel').value)
+                var a=window.document.getElementById('nivel1');
+                a.innerHTML= niv;
+                niv=a.innerHTML;
+             }
+             //Nivel 0
+             if(Number(window.document.getElementById('nivel').value)===0 && (clas===`fighter`||clas===`cleric`||clas===`magic-user`||clas===`thief`)){
+                var a=window.document.getElementById(`classe1`);
+                a.innerHTML=`Normal Human`;
+                clas=`Normal Human`;
+             }
+
+             //Gerar CA
+             if(clas===`magic-user`||clas===`Normal Human`){
+                ca= `${9-desm}`+` [`+`${10+desm}`+`]`+`unarmoured`;
+                var a=window.document.getElementById("ca");
+                a.innerHTML=ca;
+                //5 [14] (chainmail + shield)
+             }
+             if(clas===`cleric`|| clas===`fighter` || clas===`elf`|| clas===`halfling`){
+                a=Math.floor(0 + 7*Math.random())
+                ca= `${9-a-desm}`+` [`+`${10+a+desm}`+`]`+` ${armadura[a]}`
+                var a=window.document.getElementById("ca");
+                a.innerHTML=ca;
+             }
+             if(clas===`thief`){
+                a=Math.floor(1 + 2*Math.random());
+                if(a===1){
+                    a=0
+                }
+                
+                ca=`${9-a-desm}`+` [`+`${10+a+desm}`+`]`+`${armadura[a]}`
+                var a=window.document.getElementById("ca");
+                a.innerHTML=ca;
+             }
+
+
+             //Gerar hd
+            cont=0
+            hd=0
+             if(clas===`magic-user`||clas===`thief`){
+                do{
+                    hd=hd+Math.floor( 1 + 4*Math.random());
+                   
+                    cont=cont+1
+                }while(cont<lev);
+                var a=window.document.getElementById("hd");
+                a.innerHTML=hd 
+            }
+            if(clas===`cleric`||clas===`elf`||clas===`halfling`){
+                do{
+                    hd=hd+Math.floor( 1 + 6*Math.random());
+                    
+                    cont=cont+1
+                }while(cont<lev);
+                var a=window.document.getElementById("hd");
+                a.innerHTML=hd 
+            }
+            if(clas===`fighter`||clas===`dwarf`){
+                do{
+                    hd=hd+Math.floor( 1 + 8*Math.random());
+                    
+                    cont=cont+1
+                }while(cont<lev);
+                var a=window.document.getElementById("hd");
+                a.innerHTML=hd 
+            }
+            //TAC0 19 [0], movimento, saves 
+            if(clas===`dwarf`){
+                if(niv<=3){
+                    tac0=`19 [0]`
+                    save=`D8 W9 P10 B13 S12`
+                }
+                if(niv>3 && niv<=6){
+                    tac0=`17 [+2]`
+                    save=`D6 W7 P8 B10 S10`
+                }
+                if(niv>6 && niv<=9){
+                    tac0=`14 [+5]`
+                    save=`D4 W5 P6 B7 S8`
+                }
+                if(niv>9 && niv<=12){
+                    tac0=`12 [+7]`
+                    save=`D2 W3 P4 B4 S6`
+                }
+                var a=window.document.getElementById("tac0");
+                a.innerHTML=tac0
+                var a=window.document.getElementById("saves");
+                a.innerHTML=save
+            }
+            if(clas===`cleric`){
+                if(niv<=4){
+                    tac0=`19 [0]`
+                    save=`D11 W12 P14 B16 S5`
+                }
+                if(niv>4 && niv<=8){
+                    tac0=`17 [+2]`
+                    save=`D9 W10 P12 B14 S12`
+                }
+                if(niv>8 && niv<=12){
+                    tac0=`14 [+5]`
+                    save=`D6 W7 P9 B11 S9`
+                }
+                if(niv>12 && niv<=14){
+                    tac0=`12 [+7]`
+                    save=`D3 W5 P7 B8 S7`
+                }
+                var a=window.document.getElementById("tac0");
+                a.innerHTML=tac0
+                var a=window.document.getElementById("saves");
+                a.innerHTML=save
+            }
+            if(clas===`elf`){
+                if(niv<=3){
+                    tac0=`19 [0]`
+                    save=`D12 W13 P13 B15 S15`
+                }
+                if(niv>3 && niv<=6){
+                    tac0=`17 [+2]`
+                    save=`D10 W11 P11 B13 S12`
+                }
+                if(niv>6 && niv<=9){
+                    tac0=`14 [+5]`
+                    save=`D8 W9 P9 B10 S10`
+                }
+                if(niv>9 && niv<=10){
+                    tac0=`12 [+7]`
+                    save=`D6 W7 P8 B8 S8`
+                }
+                var a=window.document.getElementById("tac0");
+                a.innerHTML=tac0
+                var a=window.document.getElementById("saves");
+                a.innerHTML=save
+                
+            }
+            if(clas===`fighter`){
+                if(niv<=3){
+                    tac0=`19 [0]`
+                    save=`D12 W13 P14 B15 S16`
+                }
+                if(niv>3 && niv<=6){
+                    tac0=`17 [+2]`
+                    save=`D10 W11 P12 B13 S14`
+                }
+                if(niv>6 && niv<=9){
+                    tac0=`14 [+5]`
+                    save=`D8 W9 P10 B10 S12`
+                }
+                if(niv>9 && niv<=12){
+                    tac0=`12 [+7]`
+                    save=`D6 W7 P8 B8 S10`
+                }
+                if(niv>12 && niv<=14){
+                    tac0=`10 [+9]`
+                    save=`D4 W5 P6 B5 S8`
+                }
+                var a=window.document.getElementById("tac0");
+                a.innerHTML=tac0
+                var a=window.document.getElementById("saves");
+                a.innerHTML=save
+            }
+             if(clas===`halfling`){
+                if(niv<=3){
+                    tac0=`19 [0]`
+                    save=`D8 W9 P10 B13 S12`
+                }
+                if(niv>3 && niv<=6){
+                    tac0=`17 [+2]`
+                    save=`D6 W7 P8 B10 S10`
+                }
+                if(niv>6 && niv<=8){
+                    tac0=`14 [+5]`
+                    save=`D4 W5 P6 B7 S8`
+                }
+                var a=window.document.getElementById("tac0");
+                a.innerHTML=tac0
+                var a=window.document.getElementById("saves");
+                a.innerHTML=save
+            }
+            if(clas===`thief`){
+                if(niv<=4){
+                    tac0=`19 [0]`
+                    save=`D13 W14 P13 B16 S15`
+                }
+                if(niv>4 && niv<=8){
+                    tac0=`17 [+2]`
+                    save=`D12 W13 P11 B14 S13`
+                }
+                if(niv>8 && niv<=12){
+                    tac0=`14 [+5]`
+                    save=`D10 W11 P9 B12 S10`
+                }
+                if(niv>12 && niv<=14){
+                    tac0=`12 [+7]`
+                    save=`D8 W9 P7 B10 S8`
+                }
+                var a=window.document.getElementById("tac0");
+                a.innerHTML=tac0
+                var a=window.document.getElementById("saves");
+                a.innerHTML=save
+            }
+            if(clas===`magic-user`){
+                if(niv<=5){
+                    tac0=`19 [0]`
+                    save=`D13 W14 P13 B16 S15`
+                }
+                if(niv>5 && niv<=9){
+                    tac0=`17 [+2]`
+                    save=`D11 W12 P11 B14 S12`
+                }
+                if(niv>9 && niv<=14){
+                    tac0=`14 [+5]`
+                    save=`D8 W9 P8 B11 S8`
+                }
+                var a=window.document.getElementById("tac0");
+                a.innerHTML=tac0
+                var a=window.document.getElementById("saves");
+                a.innerHTML=save
+            }
+            //Item
+            if(niv === '0'){
+                var d=Math.floor(1 + 24*Math.random());
+                var a=window.document.getElementById("items");
+                a.innerHTML=item[d];
+            }else{
+                cont=0
+                do{
+                var d= `${item[Math.floor(0 + 23*Math.random())]} ,` + d
+                cont=cont+1  
+                }while(cont<niv);
+                var a=window.document.getElementById("items");
+                a.innerHTML=d;
+            }
+            //Arma Math.floor( 1 + 6*Math.random())
+            if(clas===`thief` || clas===`fighter` ||  clas===`elf` || clas===`halfling`){
+                var a=window.document.getElementById("att");
+                a.innerHTML= wpn[Math.floor( 0 + 18*Math.random())];
+            }
+            if(clas===`cleric`){
+                do{
+                    k=Math.floor( 1 + 4*Math.random());
+                }while(k<10 && k>14);
+                var a=window.document.getElementById("att");
+                a.innerHTML= wpn[k+10];
+            }
+            if(clas===`magic-user`){
+                k=Math.floor( 1 + 3*Math.random());
+                if(k===1){
+                    
+                }else{
+                    var a=window.document.getElementById("att");
+                    a.innerHTML= wpn[Math.floor( 0 + 2*Math.random())];
+                }
+            }
+            //Spels splsm
+           
+            if(clas==='magic-user' || clas==='elf'){ 
+                if(niv==='1'){
+                    k=(Math.floor( 1 + 12*Math.random()));
+                    console.log(`${k}`)
+                    var a=window.document.getElementById("spells");
+                    a.innerHTML= splsm[0][k];
+                }
+                if(niv==='2'){
+                    k=(Math.floor( 1 + 12*Math.random()));
+                    console.log(`${k}`)
+                    var a=window.document.getElementById("spells");
+                    a.innerHTML= splsm[0][k]+ `, ${splsm[0][Math.floor( 1 + 12*Math.random())]}`;
+                }
+                if(niv==='3'){
+                    k=(Math.floor( 1 + 12*Math.random()));
+                    console.log(`${k}`)
+                    var a=window.document.getElementById("spells");
+                    a.innerHTML= splsm[0][k]+ `, ${splsm[0][Math.floor( 1 + 12*Math.random())]}`+ `, ${splsm[1][Math.floor( 1 + 12*Math.random())]}`;
+                }
+            }
+
+            
+        }
+    </script>
+</body>
+</html>
