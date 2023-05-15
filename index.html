@@ -157,7 +157,7 @@
                     , 'Falar com Animais'
                     , 'Imobilizar Pessoa'
                     , 'Resistir ao Fogo'
-                    , 'Silêncio, 4,5 m de Raio']
+                    , 'Silêncio, 4,5 m de Raio'],
                     [ 'Aumentar Animal'
                     , 'Curar Doença (Causar Doença)'
                     , 'Encantar Arma'
@@ -640,6 +640,26 @@
                     console.log(`${k}`)
                     var a=window.document.getElementById("spells");
                     a.innerHTML= splsm[0][k]+ `, ${splsm[0][Math.floor( 1 + 12*Math.random())]}`+ `, ${splsm[1][Math.floor( 1 + 12*Math.random())]}`;
+                }
+            }
+            if(clas==='cleric'){ 
+                if(niv==='2'){
+                    k=(Math.floor( 1 + 9*Math.random()));
+                    console.log(`${k}`)
+                    var a=window.document.getElementById("spells");
+                    a.innerHTML= splsc[0][k-1];
+                }
+                if(niv==='3'){
+                    k=(Math.floor( 1 + 9*Math.random()));
+                    console.log(`${k}`)
+                    var a=window.document.getElementById("spells");
+                    a.innerHTML= splsc[0][k-1]+ `, ${splsc[0][Math.floor( 1 + 9*Math.random())-1]}`;
+                }
+                if(niv==='4'){
+                    k=(Math.floor( 1 + 9*Math.random()));
+                    console.log(`${k}`)
+                    var a=window.document.getElementById("spells");
+                    a.innerHTML= splsc[0][k-1]+ `, ${splsc[0][Math.floor( 1 + 9*Math.random())-1]}`+ `, ${splsc[1][Math.floor( 1 + 9*Math.random())-1]}`;
                 }
             }
 
