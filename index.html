@@ -45,6 +45,7 @@
            <option value="dwarf">Dwarf</option>
            <option value="elf">Elf</option>
            <option value="halfling">Halfling</option>
+           <option value="goblin">Goblin</option>
         </select>
         Nivel:
         <select id="nivel">
@@ -312,6 +313,9 @@
              if(dex>8 && con>8){
                 classlist.push(`halfling`);     
              }
+              if(dex>8 && str>8){
+                classlist.push(`goblin`);     
+             }
              var c=Math.floor( 1 + (classlist.length-1)*Math.random());
              
              var a=window.document.getElementById(`classe1`);
@@ -344,10 +348,23 @@
                         a.innerHTML=`9`
                         dex=a.innerHTML
                     }
-                }     
+                }
+                if(clas===`goblin` && str<9 || dex<9){
+    
+                    if(str<9){
+                        var a=window.document.getElementById('str');
+                        a.innerHTML=`9`
+                        con=a.innerHTML
+                    }
+                    if(dex<9){
+                        var a=window.document.getElementById('dex');
+                        a.innerHTML=`9`
+                        dex=a.innerHTML
+                    }
+                }       
                 }
                 //Nivel aleatorio
-                if(window.document.getElementById('nivel').value==="aleatorio"){
+               if(window.document.getElementById('nivel').value==="aleatorio"){
 
                 var lev=14
                 
@@ -357,7 +374,7 @@
                if(classlist[c]===`elf`){
                 var lev=10
                }
-               if(classlist[c]===`halfling`){
+               if(classlist[c]===`halfling` && classlist[c]===`goblin`){
                 var lev=8
                }
                
@@ -385,7 +402,7 @@
                 a.innerHTML=ca;
                 //5 [14] (chainmail + shield)
              }
-             if(clas===`cleric`|| clas===`fighter` || clas===`elf`|| clas===`halfling`){
+             if(clas===`cleric`|| clas===`fighter` || clas===`elf`|| clas===`halfling` || clas===`goblin`){
                 a=Math.floor(0 + 7*Math.random())
                 ca= `${9-a-desm}`+` [`+`${10+a+desm}`+`]`+` ${armadura[a]}`
                 var a=window.document.getElementById("ca");
@@ -415,7 +432,7 @@
                 var a=window.document.getElementById("hd");
                 a.innerHTML=hd 
             }
-            if(clas===`cleric`||clas===`elf`||clas===`halfling`){
+            if(clas===`cleric`||clas===`elf`||clas===`halfling`|| clas===`goblin`){
                 do{
                     hd=hd+Math.floor( 1 + 6*Math.random());
                     
@@ -527,7 +544,7 @@
                 var a=window.document.getElementById("saves");
                 a.innerHTML=save
             }
-             if(clas===`halfling`){
+             if(clas===`halfling`|| clas===`goblin`){
                 if(niv<=3){
                     tac0=`19 [0]`
                     save=`D8 W9 P10 B13 S12`
@@ -600,7 +617,7 @@
                 a.innerHTML=d;
             }
             //Arma Math.floor( 1 + 6*Math.random())
-            if(clas===`thief` || clas===`fighter` ||  clas===`elf` || clas===`halfling`){
+            if(clas===`thief` || clas===`fighter` ||  clas===`elf` || clas===`halfling`|| clas===`goblin`){
                 var a=window.document.getElementById("att");
                 a.innerHTML= wpn[Math.floor( 0 + 18*Math.random())];
             }
